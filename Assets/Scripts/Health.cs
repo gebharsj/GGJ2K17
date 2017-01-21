@@ -59,8 +59,8 @@ public class Health : MonoBehaviour
     {
         if(transform.tag == "Enemy")
         {
-            nav.speed = 0f;
-            gameObject.GetComponent<FirstEnemy>().enabled = false;
+            //nav.speed = 0f;
+            //gameObject.GetComponent<FirstEnemy>().enabled = false;
             int randomDeath = Random.Range(1, 3);
             anim.SetInteger("HasDied", randomDeath);
             yield return new WaitForSeconds(7f);
