@@ -4,14 +4,14 @@ using System.Collections;
 public class Health : MonoBehaviour
 {
     public float baseHealth;
-    float health;
+    public float health;
 
     void Start()
     {
         health = baseHealth;
     }
     
-    public void TookDamage(int damage)
+    public void TookDamage(float damage)
     {
         health = health - damage;
         if(health <= 0)
@@ -24,4 +24,15 @@ public class Health : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    //void OnParticleCollision(GameObject other)
+    //{
+    //    if(gameObject.name == "Enemy")
+    //    {
+    //        if(other.tag == "PlayerBeam")
+    //        {
+    //            TookDamage(1);
+    //        }
+    //    }
+    //}
 }
