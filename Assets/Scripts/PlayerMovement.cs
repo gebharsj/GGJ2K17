@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMovement : MonoBehaviour {
-
+public class PlayerMovement : MonoBehaviour
+{
     public float speed = 10f;
+    public float rotationSpeed = 100f;
     public float jumpForce = 10f;
     float hori;
+    float hori2;
     float vert;
     float m_speed;
     float groundCheckDistance = 0.2f;
@@ -14,12 +16,14 @@ public class PlayerMovement : MonoBehaviour {
     bool isGrounded;
     bool settingLandBool;
     bool horiPressed;
+    bool hori2Pressed;
     bool vertPressed;
 
     Animator anim;
     Rigidbody rb;
     KeyCode jumpButton;
     string horizontalAxis;
+    string horizontalAxis2;
     string verticalAxis;
 
     void Start()
@@ -32,12 +36,14 @@ public class PlayerMovement : MonoBehaviour {
         if (gameObject.name == "PlayerOne")
         {
             horizontalAxis = "PlayerOneHorizontal";
+            horizontalAxis2 = "PlayerOneHorizontal2";
             verticalAxis = "PlayerOneVertical";
             jumpButton = KeyCode.Joystick1Button0;
         }
         else if (gameObject.name == "PlayerTwo")
         {
             horizontalAxis = "PlayerTwoHorizontal";
+            horizontalAxis2 = "PlayerTwoHorizontal2";
             verticalAxis = "PlayerTwoVertical";
             jumpButton = KeyCode.Joystick2Button0;
         }
@@ -48,6 +54,7 @@ public class PlayerMovement : MonoBehaviour {
 
         hori = Input.GetAxis(horizontalAxis);
         vert = Input.GetAxis(verticalAxis);
+        hori2 = Input.GetAxis(horizontalAxis2);
 
         CheckGroundedStatus();
 
@@ -69,6 +76,11 @@ public class PlayerMovement : MonoBehaviour {
         else
             horiPressed = false;
 
+        if (hori2 != 0)
+            hori2Pressed = true;
+        else
+            hori2Pressed = false;
+
         if (vert != 0)
             vertPressed = true;
         else
@@ -85,6 +97,7 @@ public class PlayerMovement : MonoBehaviour {
             m_speed = speed;
 
         transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
+        transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed, 0));
     }
 
     void CheckGroundedStatus()

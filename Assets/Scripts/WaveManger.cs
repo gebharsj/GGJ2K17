@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class WaveManger : MonoBehaviour {
+public class WaveManger : MonoBehaviour
+{
 	[SerializeField]
-	private byte totalCap;
+	private int totalCap;
 	[SerializeField]
 	private Transform[] spawnPoints;
 	private List<GameObject> activeEnemies = new List<GameObject>();
@@ -18,18 +19,21 @@ public class WaveManger : MonoBehaviour {
 	private ObjectPooling enemyPool;
 	private int enemyCount;
 
-	void Start () {
+	void Start ()
+    {
 		waveCounter = 1;
 		StartCoroutine(UpdateWaveText (waveCounter));
 		enemyPool = GameObject.Find ("EnemyPool").GetComponent<ObjectPooling>();
 		currentCap = totalCap;// change when an algorithm is made for the wave cap
 		currentEnemies = currentCap;
 		roundEnemyLimit = Mathf.RoundToInt(currentCap * .25f);
+        enemyCount = Mathf.RoundToInt(roundEnemyLimit);
 		StartCoroutine (Spawn());
 	}
-	IEnumerator Spawn(){
-		for (int i = 0; i <= roundEnemyLimit; i++) {
-			print (i);
+	IEnumerator Spawn()
+    {
+		for (int i = 0; i <= roundEnemyLimit; i++)
+        {
 			GameObject newEnemy = enemyPool.GetPooledObject ();
 			activeEnemies.Add (newEnemy);
 			newEnemy.transform.position = spawnPoints [Random.Range (0, spawnPoints.Length)].transform.position;
@@ -37,19 +41,26 @@ public class WaveManger : MonoBehaviour {
 			yield return new WaitForSeconds (trickleEffectTimer);
 		}
 	}
-	void ActivateEnemies(GameObject enemy){
+	void ActivateEnemies(GameObject enemy)
+    {
 		enemy.SetActive (true);
 		enemy.GetComponent<Rigidbody> ().useGravity = true;
 	}
-	IEnumerator Respawn(){
-		for (enemyCount = enemyCount; enemyCount < roundEnemyLimit; enemyCount++) {
-			if (enemyCount < currentCap) {
+	IEnumerator Respawn()
+    {
+        print("Respawn");
+		for (enemyCount = enemyCount; enemyCount < roundEnemyLimit; enemyCount++)
+        {
+			if (enemyCount < currentCap)
+            {
 				GameObject newEnemy = enemyPool.GetPooledObject ();
 				activeEnemies.Add (newEnemy);
 				newEnemy.transform.position = spawnPoints [Random.Range (0, spawnPoints.Length)].transform.position;
 				ActivateEnemies (newEnemy);
 				yield return new WaitForSeconds (trickleEffectTimer);
-			} else {
+			}
+            else
+            {
 				yield return null;
 			}
 		}
@@ -58,17 +69,25 @@ public class WaveManger : MonoBehaviour {
 	{
 		enemyCount--;
 		currentEnemies--;
-		if (currentEnemies <= 0f) {
+        print(currentEnemies);
+        print(enemyCount);
+        activeEnemies.Remove(killedEnemy);
+        if (currentEnemies <= 0f)
+        {
 			StartCoroutine(NextWave());
-		} else {
-			activeEnemies.Remove (killedEnemy);
-			if (enemyCount <= roundEnemyLimit * .5f) {
+		}
+        else
+        {
+			if (enemyCount <= roundEnemyLimit * .5f)
+            {
 				StartCoroutine(Respawn ());
 			}
 		}
 	}
-	IEnumerator NextWave(){
-		currentCap = Mathf.RoundToInt( currentCap * 1.5f);
+	IEnumerator NextWave()
+    {
+        print("NextWave");
+		currentCap = Mathf.RoundToInt( currentCap * 1.2f);
 		currentEnemies = currentCap;
 		roundEnemyLimit = Mathf.RoundToInt (currentCap * .25f);
 		enemyCount = Mathf.RoundToInt(roundEnemyLimit);
@@ -76,7 +95,8 @@ public class WaveManger : MonoBehaviour {
 		StartCoroutine(UpdateWaveText (waveCounter));
 		yield return new WaitForSeconds (timeBetweenWaves);
 	}
-	IEnumerator UpdateWaveText(int currentWave){
+	IEnumerator UpdateWaveText(int currentWave)
+    {
 		waveText.text = "Wave " + currentWave.ToString ();
 		yield return new WaitForSeconds (waveCounterUITimer);
 	}

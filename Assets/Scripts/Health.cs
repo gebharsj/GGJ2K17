@@ -12,6 +12,11 @@ public class Health : MonoBehaviour
         waveManager = GameObject.Find("WaveManager").GetComponent<WaveManger>();
         health = baseHealth;
     }
+
+    void OnEnable()
+    {
+        health = baseHealth;
+    }
     
     public void TookDamage(float damage)
     {

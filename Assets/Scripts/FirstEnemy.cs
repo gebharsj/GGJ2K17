@@ -23,7 +23,6 @@ public class FirstEnemy : MonoBehaviour {
 		nav = GetComponent<NavMeshAgent> ();
 		_target = Random.Range (0, targets.Count);
 		theTarget = targets[_target];
-		print (theTarget);
 		Chase ();
 	}
 	
