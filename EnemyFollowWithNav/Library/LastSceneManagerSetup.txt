@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/EnemyFollowWithNav.unity
+  isLoaded: 1
+  isActive: 1
