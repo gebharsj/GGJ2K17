@@ -44,7 +44,9 @@ public class FirstEnemy : MonoBehaviour {
 			else
 			Chase ();
 		}
-	}
+        Chase();
+
+    }
 	void OnTriggerEnter(Collider other){
 		if (other.tag == "Player") 
 		{
