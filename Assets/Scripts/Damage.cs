@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Damage : MonoBehaviour {
+public class Damage : MonoBehaviour
+{
+    public string killer;
 
     void Start()
     {
@@ -12,7 +14,7 @@ public class Damage : MonoBehaviour {
     {
         if(other.tag == "Enemy")
         {
-            other.GetComponent<Health>().TookDamage(1f);
+            other.GetComponent<Health>().TookDamage(1f, killer);
         }
     }
 }

@@ -10,6 +10,8 @@ public class Health : MonoBehaviour
     TheWaveManager waveManager;
     Animator anim;
     NavMeshAgent nav;
+    string killer;
+
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
@@ -39,6 +41,20 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void TookDamage(float damage, string myKiller)
+    {
+        killer = myKiller;
+        health = health - damage;
+        if (gameObject.tag == "Player")
+            healthBar.fillAmount = health / 100.0f;
+
+        if (health <= 0)
+        {
+            StartCoroutine(WasDestroyed());
+        }
+    }
+
+
     public IEnumerator WasDestroyed()
     {
         if(transform.tag == "Enemy")
@@ -48,6 +64,10 @@ public class Health : MonoBehaviour
             int randomDeath = Random.Range(1, 3);
             anim.SetInteger("HasDied", randomDeath);
             yield return new WaitForSeconds(7f);
+            if (killer == "PlayerOne")
+                GameManager.playerOneScore++;
+            else if(killer == "PlayerTwo")
+                GameManager.playerTwoScore++;
             waveManager.EnemyDied(gameObject);
             gameObject.SetActive(false);
         }

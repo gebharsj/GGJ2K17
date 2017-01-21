@@ -59,6 +59,7 @@ public class FirstEnemy : MonoBehaviour {
 	
     void LateUpdate()
     {
+        anim.SetFloat("Distance", Vector3.Distance(transform.position, theTarget.transform.position));
         if (attacking == false && Vector3.Distance(transform.position, theTarget.transform.position) > this.GetComponent<SphereCollider>().radius)
         {
             Chase();
@@ -80,7 +81,9 @@ public class FirstEnemy : MonoBehaviour {
     {
         anim.SetBool("IsRunning", false);
         anim.SetBool("Attack", true);
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(.5f);
+        anim.SetBool("Attack", false);
+        yield return new WaitForSeconds(2f);
         GameObject clone = Instantiate(ring, ringSpawn.transform.position, ringSpawn.transform.rotation) as GameObject;
         clone.transform.SetParent(null);
         attacking = false;     
