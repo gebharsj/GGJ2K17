@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
         playerOne.name = "PlayerOne";
         players.Add(playerOne);
 
-        GameObject playerTwo = Instantiate(player2Prefab, transform.position, Quaternion.identity) as GameObject;
+        GameObject playerTwo = Instantiate(player2Prefab, transform.position + new Vector3(0,0,3), Quaternion.identity) as GameObject;
         playerTwo.name = "PlayerTwo";
         players.Add(playerTwo);
     }

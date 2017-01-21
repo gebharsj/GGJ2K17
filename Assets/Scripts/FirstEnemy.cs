@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class FirstEnemy : MonoBehaviour {
 	private NavMeshAgent nav;
 	[SerializeField]
-	private List<GameObject> targets; // array of targets
+	private List<GameObject> targets; // list of targets
     [SerializeField]
     private float speed; // checking distance is for when a player enters the enemy's trigger. If the current target is too far away then theTarget will become the player that the enemy collided with.
 
@@ -13,9 +13,26 @@ public class FirstEnemy : MonoBehaviour {
 	private int _target; // the target selector 
                          // Use this for initialization
     GameManager gameManager;
-	void Start ()
+    Animator anim;
+    float lastTime;
+    float cooldown = 1f;
+    bool attacking;
+    void OnEnable()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        anim = GetComponent<Animator>();
+        foreach (GameObject go in gameManager.players)
+        {
+            targets.Add(go);
+        }
+        nav = GetComponent<NavMeshAgent>();
+        _target = Random.Range(0, targets.Count);
+        theTarget = targets[_target];
+        Chase();
+    }
+	void Start ()
+    {
+        anim = GetComponent<Animator>();
         foreach(GameObject go in gameManager.players)
         {
             targets.Add(go);
@@ -26,45 +43,49 @@ public class FirstEnemy : MonoBehaviour {
 		Chase ();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		//print ("Chase");
-		if (!theTarget.activeInHierarchy)
-		{
-			for(int i = 0; i < targets.Count; i++)
-			{
-				if (targets [i].activeInHierarchy)
-					theTarget = targets [i].gameObject;
-			}
-
-			if (!theTarget.activeInHierarchy) {
-				print("I have no targets");
-				//Do nothing
-			}
-			else
-			Chase ();
-		}
-        Chase();
-
+	void Update ()
+    {
+        if (!theTarget.activeInHierarchy)
+        {
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].activeInHierarchy)
+                    theTarget = targets[i].gameObject;
+            }
+        }
     }
-	void OnTriggerEnter(Collider other){
-		if (other.tag == "Player") 
-		{
-			Attack ();
-		}
-	}
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Player") {
-				Chase ();
-		}
-	}
-	void Attack(){// adding to the attack function later on in the jam
-		//print ("attack");
-		nav.speed = 0f;
-	}
+	
+    void LateUpdate()
+    {
+        if (attacking == false && Vector3.Distance(transform.position, theTarget.transform.position) > this.GetComponent<SphereCollider>().radius)
+        {
+            Chase();
+        }
+        else if(!attacking && Vector3.Distance(transform.position, theTarget.transform.position) < this.GetComponent<SphereCollider>().radius)
+        {
+            anim.SetBool("Attack", false);
+            anim.SetBool("IsRunning", false);
+
+            if (Time.time + cooldown > lastTime && !attacking)
+            {
+                attacking = true;
+                lastTime = Time.time;
+                StartCoroutine(Attack());
+            }
+        }
+    }
+	IEnumerator Attack()
+    {
+        anim.SetBool("IsRunning", false);
+        anim.SetBool("Attack", true);
+        yield return new WaitForSeconds(4f);
+        attacking = false;     
+    }
 	void Chase()
 	{
-		nav.destination = theTarget.transform.position;
-		nav.speed = speed;
+        anim.SetBool("Attack", false);
+        anim.SetBool("IsRunning", true);
+        nav.speed = speed;
+        nav.destination = theTarget.transform.position;       
 	}
 }

@@ -1,16 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
+    public Image healthBar;
     public float baseHealth;
     float health;
-    WaveManger waveManager;
-
+    TheWaveManager waveManager;
+    Animator anim;
+    NavMeshAgent nav;
     void Start()
     {
-        waveManager = GameObject.Find("WaveManager").GetComponent<WaveManger>();
+        nav = GetComponent<NavMeshAgent>();
+        waveManager = GameObject.Find("WaveManager").GetComponent<TheWaveManager>();
         health = baseHealth;
+        
+        if(transform.tag == "Enemy")
+        {
+            anim = GetComponent<Animator>();
+        }
     }
 
     void OnEnable()
@@ -21,16 +30,24 @@ public class Health : MonoBehaviour
     public void TookDamage(float damage)
     {
         health = health - damage;
+        if (gameObject.tag == "Player")
+            healthBar.fillAmount = health / 100.0f;
+
         if(health <= 0)
         {
-            WasDestroyed();
+            StartCoroutine(WasDestroyed());
         }
     }
 
-    public void WasDestroyed()
+    public IEnumerator WasDestroyed()
     {
         if(transform.tag == "Enemy")
         {
+            nav.speed = 0f;
+            gameObject.GetComponent<FirstEnemy>().enabled = false;
+            int randomDeath = Random.Range(1, 3);
+            anim.SetInteger("HasDied", randomDeath);
+            yield return new WaitForSeconds(7f);
             waveManager.EnemyDied(gameObject);
             gameObject.SetActive(false);
         }
