@@ -11,6 +11,8 @@ public class FirstEnemy : MonoBehaviour {
 
 	private GameObject theTarget;// the actual target
 	private int _target; // the target selector 
+    public GameObject ring;
+    public GameObject ringSpawn;
                          // Use this for initialization
     GameManager gameManager;
     Animator anim;
@@ -78,7 +80,9 @@ public class FirstEnemy : MonoBehaviour {
     {
         anim.SetBool("IsRunning", false);
         anim.SetBool("Attack", true);
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2.5f);
+        GameObject clone = Instantiate(ring, ringSpawn.transform.position, ringSpawn.transform.rotation) as GameObject;
+        clone.transform.SetParent(null);
         attacking = false;     
     }
 	void Chase()

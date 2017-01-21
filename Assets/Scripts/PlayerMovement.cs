@@ -106,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.2f) + (Vector3.down * groundCheckDistance));
         if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo))
         {
-            if ((hitInfo.collider.tag == "Ground" || hitInfo.collider.tag == "Environment") && hitInfo.distance <= groundCheckDistance)
+            if ((hitInfo.collider.tag == "Ground" || hitInfo.collider.tag == "Ring" || hitInfo.collider.tag == "Environment") && hitInfo.distance <= groundCheckDistance)
             {
                 isGrounded = true;
             }
