@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerShooting : MonoBehaviour {
-
-    public GameObject beam;
+public class PlayerShooting : MonoBehaviour
+{
+    public ParticleSystem[] beamParts;
     Animator anim;
     string fireAxis;
 
@@ -21,16 +21,23 @@ public class PlayerShooting : MonoBehaviour {
         }
     }
 	
-	void Update () {
-        if (Input.GetAxis(fireAxis) > 0 && !beam.activeInHierarchy)
+	void Update ()
+    {
+        if (Input.GetAxis(fireAxis) > 0 && !beamParts[0].enableEmission)
         {
             anim.SetBool("isShooting", true);
-            beam.SetActive(true);
+           foreach(ParticleSystem ps in beamParts)
+            {
+                ps.enableEmission = true;
+            }
         }
-        else if (Input.GetAxis(fireAxis) < 0.1f && beam.activeInHierarchy)
+        else if (Input.GetAxis(fireAxis) < 0.1f && beamParts[0].enableEmission)
         {
             anim.SetBool("isShooting", false);
-            beam.SetActive(false);
+            foreach (ParticleSystem ps in beamParts)
+            {
+                ps.enableEmission = false;
+            }
         }
 	}
 }
