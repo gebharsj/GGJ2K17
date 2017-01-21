@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour {
 
     Animator anim;
     Rigidbody rb;
+    KeyCode jumpButton;
+    string horizontalAxis;
+    string verticalAxis;
 
     void Start()
     {
@@ -25,12 +28,26 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         originalGroundCheckDistance = groundCheckDistance;
         m_speed = speed;
+
+        if (gameObject.name == "PlayerOne")
+        {
+            horizontalAxis = "PlayerOneHorizontal";
+            verticalAxis = "PlayerOneVertical";
+            jumpButton = KeyCode.Joystick1Button0;
+        }
+        else if (gameObject.name == "PlayerTwo")
+        {
+            horizontalAxis = "PlayerTwoHorizontal";
+            verticalAxis = "PlayerTwoVertical";
+            jumpButton = KeyCode.Joystick2Button0;
+        }
     }
 
     void FixedUpdate()
     {
-        hori = Input.GetAxis("Horizontal");
-        vert = Input.GetAxis("Vertical");
+
+        hori = Input.GetAxis(horizontalAxis);
+        vert = Input.GetAxis(verticalAxis);
 
         CheckGroundedStatus();
 
@@ -40,7 +57,7 @@ public class PlayerMovement : MonoBehaviour {
             anim.SetFloat("Vertical", vert);
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKeyDown(jumpButton) && isGrounded)
         {
             anim.SetBool("isJumping", true);
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
