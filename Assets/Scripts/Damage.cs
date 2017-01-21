@@ -10,7 +10,7 @@ public class Damage : MonoBehaviour {
 
 	void OnParticleCollision(GameObject other)
     {
-        if(other.name == "Enemy")
+        if(other.tag == "Enemy")
         {
             other.GetComponent<Health>().TookDamage(1f);
         }
