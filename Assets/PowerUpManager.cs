@@ -13,7 +13,7 @@ public class PowerUpManager : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         damageScript = GetComponentInChildren<Damage>();
-        playerThrowGrenade = GetComponent<PlayerThrowGrenade>();
+        playerThrowGrenade = GetComponentInChildren<PlayerThrowGrenade>();
     }
 
     public void PowerUpChosen(string type)
@@ -30,6 +30,7 @@ public class PowerUpManager : MonoBehaviour
                 StartCoroutine(playerMovement.JumpPowerUp());
                 break;
             case "Grenade":
+                StartCoroutine(playerThrowGrenade.PowerUp());
                 break;
         }
     }        
