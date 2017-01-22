@@ -15,6 +15,11 @@ public class Health : MonoBehaviour
     string killer;
     int lives = 3;
 
+    public Text playerOneLives;
+    public Text playerTwoLives;
+    public Text playerOneRespawnTimer;
+    public Text playerTwoRespawnTimer;
+
     void Start()
     {
         nav = GetComponent<NavMeshAgent>();
@@ -24,6 +29,20 @@ public class Health : MonoBehaviour
         if(transform.tag == "Enemy")
         {
             anim = GetComponent<Animator>();
+        }
+        else if(transform.name == "PlayerOne")
+        {
+            playerOneLives = GameObject.Find("Player1Lives").GetComponent<Text>();
+            playerOneLives.text = "Lives left: " + lives;
+            playerOneRespawnTimer = GameObject.Find("Player1RespawnTimer").GetComponent<Text>();
+            playerOneRespawnTimer.enabled = false;
+        }
+        else if(transform.name == "PlayerTwo")
+        {
+            playerTwoLives = GameObject.Find("Player2Lives").GetComponent<Text>();
+            playerTwoLives.text = "Lives left: " + lives;
+            playerTwoRespawnTimer = GameObject.Find("Player2RespawnTimer").GetComponent<Text>();
+            playerTwoRespawnTimer.enabled = false;
         }
     }
 
@@ -73,14 +92,36 @@ public class Health : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
-            transform.position = Vector3.zero;
-            gameObject.SetActive(true);
             lives--;
-            if(lives <= 0)
+            if (lives <= 0)
             {
                 SceneManager.LoadScene("GameOver");
             }
+
+            gameObject.SetActive(false);
+            transform.position = Vector3.zero;
+
+            if (transform.name == "PlayerOne")
+            {
+                playerOneLives.text = "Lives Left: " + lives;
+                playerOneRespawnTimer.enabled = true;
+                for (int i = 5; i > 0; i--)
+                {
+                    playerOneRespawnTimer.text = "Respawning in " + i + "...";
+                }
+                playerOneRespawnTimer.enabled = false;
+            }
+            else
+            {
+                playerTwoLives.text = "Lives Left: " + lives;
+                playerTwoRespawnTimer.enabled = true;
+                for (int i = 5; i > 0; i--)
+                {
+                    playerTwoRespawnTimer.text = "Respawning in " + i + "...";
+                }
+                playerTwoRespawnTimer.enabled = false;
+            }
+            gameObject.SetActive(true);
         }
     }
 }
