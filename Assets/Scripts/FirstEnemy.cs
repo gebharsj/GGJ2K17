@@ -30,6 +30,8 @@ public class FirstEnemy : MonoBehaviour
                 agent.SetDestination(target.transform.position);
             else if (agent.remainingDistance <= 5)
             {
+                if (GetComponent<Health>().health <= 0)
+                    StopAllCoroutines();
                 agent.velocity = Vector3.zero;
                 CallCoroutine("Attack");
             }

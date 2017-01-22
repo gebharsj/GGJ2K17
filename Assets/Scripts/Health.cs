@@ -6,7 +6,8 @@ public class Health : MonoBehaviour
 {
     public Image healthBar;
     public float baseHealth;
-    float health;
+    [HideInInspector]
+    public float health;
     TheWaveManager waveManager;
     Animator anim;
     NavMeshAgent nav;
@@ -53,17 +54,16 @@ public class Health : MonoBehaviour
             StartCoroutine(WasDestroyed());
         }
     }
-
-
+    
     public IEnumerator WasDestroyed()
     {
         if(transform.tag == "Enemy")
         {
-            //nav.speed = 0f;
-            //gameObject.GetComponent<FirstEnemy>().enabled = false;
+            nav.velocity = Vector3.zero;
             int randomDeath = Random.Range(1, 3);
             anim.SetInteger("HasDied", randomDeath);
             yield return new WaitForSeconds(7f);
+            anim.Stop();
             if (killer == "PlayerOne")
                 GameManager.playerOneScore++;
             else if(killer == "PlayerTwo")
@@ -72,6 +72,6 @@ public class Health : MonoBehaviour
             gameObject.SetActive(false);
         }
         else
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
     }
 }
