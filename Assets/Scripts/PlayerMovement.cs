@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     bool horiPressed;
     bool hori2Pressed;
     bool vertPressed;
+    bool canSprint = true;
     public bool isPoweredUp = false;
     Animator anim;
     Rigidbody rb;
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     string horizontalAxis2;
     string verticalAxis;
     float originalJumpForce;
+    KeyCode sprintButton;
+    bool isStunned;
 
     void Start()
     {
@@ -41,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
             horizontalAxis2 = "PlayerOneHorizontal2";
             verticalAxis = "PlayerOneVertical";
             jumpButton = KeyCode.Joystick1Button0;
+            sprintButton = KeyCode.Joystick1Button8;
         }
         else if (gameObject.name == "PlayerTwo")
         {
@@ -48,10 +52,12 @@ public class PlayerMovement : MonoBehaviour
             horizontalAxis2 = "PlayerTwoHorizontal2";
             verticalAxis = "PlayerTwoVertical";
             jumpButton = KeyCode.Joystick2Button0;
+            sprintButton = KeyCode.Joystick2Button8;
+
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
 
         hori = Input.GetAxis(horizontalAxis);
@@ -59,6 +65,11 @@ public class PlayerMovement : MonoBehaviour
         hori2 = Input.GetAxis(horizontalAxis2);
 
         CheckGroundedStatus();
+        if(Input.GetKeyDown(sprintButton) && canSprint)
+        {
+            canSprint = false;
+            StartCoroutine(Sprint());
+        }
 
         if (isGrounded)
         {
@@ -98,17 +109,22 @@ public class PlayerMovement : MonoBehaviour
         else
             m_speed = speed;
 
-        if(!isPoweredUp)
+        if(!isStunned)
         {
-            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
-            transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed, 0));
-            print("Non powered up movement");
+            if (!isPoweredUp)
+            {
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
+                transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed, 0));
+            }
+            else
+            {
+                transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 2, 0f, vert * Time.deltaTime * m_speed * 2));
+                transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed * 2, 0));
+            }
         }
         else
         {
-            print("Powered up movement");
-            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 2, 0f, vert * Time.deltaTime * m_speed * 2));
-            transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed * 2, 0));
+            //Do Nothing
         }
 
     }
@@ -139,10 +155,31 @@ public class PlayerMovement : MonoBehaviour
         isPoweredUp = false;
     }
 
+    public IEnumerator Sprint()
+    {
+        isPoweredUp = true;
+        yield return new WaitForSeconds(5);
+        isPoweredUp = false;
+        yield return new WaitForSeconds(5);
+        canSprint = true;
+    }
+
     public IEnumerator JumpPowerUp()
     {
         jumpForce *= 2;
         yield return new WaitForSeconds(15);
         jumpForce = originalJumpForce;
+    }
+
+    public IEnumerator Stun()
+    {
+        if(!isStunned)
+        {
+            isStunned = true;
+            yield return new WaitForSeconds(0.5f);
+            isStunned = false;
+        }
+        yield return new WaitForSeconds(0.5f);
+        isStunned = false;
     }
 }

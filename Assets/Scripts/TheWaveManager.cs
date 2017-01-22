@@ -53,12 +53,12 @@ public class TheWaveManager : MonoBehaviour {
                         return;
                     }
                     int choosePlayer = Random.Range(0, 1);
-                    newEnemy.transform.position = new Vector3(Random.Range(gameManager.players[choosePlayer].transform.position.x - 20,
-                        gameManager.players[choosePlayer].transform.position.x + 20),0,
-                        Random.Range(gameManager.players[choosePlayer].transform.position.z - 20,
-                        gameManager.players[choosePlayer].transform.position.z + 20));
+                    newEnemy.transform.position = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].position;
 
-                    //enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].position;
+                    // new Vector3(Random.Range(gameManager.players[choosePlayer].transform.position.x - 20,
+                    //gameManager.players[choosePlayer].transform.position.x + 20),0,
+                        //Random.Range(gameManager.players[choosePlayer].transform.position.z - 20,
+                        //gameManager.players[choosePlayer].transform.position.z + 20));
                     newEnemy.name = "Enemy";
                     newEnemy.SetActive(true);
                     activeEnemies.Add(newEnemy);
@@ -74,28 +74,6 @@ public class TheWaveManager : MonoBehaviour {
         }
     }
 
-    void TrickleSpawn()
-    {
-        while (_CurrentHpUsed < _AllowedHp)
-        {
-            GameObject newEnemy = enemyPool.GetPooledObject();
-            if (newEnemy == null)
-            {
-                return;
-            }
-            newEnemy.transform.position = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].position;
-            newEnemy.name = "Enemy";
-            newEnemy.SetActive(true);
-            activeEnemies.Add(newEnemy);
-            _CurrentHpUsed += newEnemy.GetComponent<Health>().baseHealth;
-            _RoundHPUsed += newEnemy.GetComponent<Health>().baseHealth;
-
-            if (_RoundHPUsed >= _RoundHPLimit)
-            {
-                canSpawn = false;
-            }
-        }
-    }
     public void EnemyDied(GameObject killedEnemy)
     {
         _CurrentHpUsed -= killedEnemy.GetComponent<Health>().baseHealth;

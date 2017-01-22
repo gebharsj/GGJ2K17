@@ -54,7 +54,7 @@ public class Health : MonoBehaviour
     public void TookDamage(float damage)
     {
         health = health - damage;
-            healthBar.fillAmount = health / 100.0f;
+        healthBar.fillAmount = health / baseHealth;
 
         if(health <= 0)
         {
@@ -66,7 +66,7 @@ public class Health : MonoBehaviour
     {
         killer = myKiller;
         health = health - damage;
-            healthBar.fillAmount = health / 100.0f;
+        healthBar.fillAmount = health / baseHealth;
 
         if (health <= 0)
         {

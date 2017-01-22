@@ -7,6 +7,13 @@ public class PowerUpSpawner : MonoBehaviour
     public GameObject[] powerUpSpawnPoints;
     public static bool powerUpActive;
 
+    GameManager gameManager;
+
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
+
 	void Update ()
     {
 	    if(!powerUpActive)
@@ -14,7 +21,11 @@ public class PowerUpSpawner : MonoBehaviour
             powerUpActive = true;
             int randomPowerUp = Random.Range(0, powerUps.Length);
             int randomSpawnLocation = Random.Range(0, powerUpSpawnPoints.Length);
-            Instantiate(powerUps[randomPowerUp], powerUpSpawnPoints[randomSpawnLocation].transform.position, Quaternion.identity);
+            GameObject powerUp = Instantiate(powerUps[randomPowerUp], powerUpSpawnPoints[randomSpawnLocation].transform.position, Quaternion.identity) as GameObject;
+            foreach(GameObject go in gameManager.players)
+            {
+                go.GetComponentInChildren<LookAt>().target = powerUp;
+            }
         }
 	}
 }

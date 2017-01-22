@@ -6,7 +6,7 @@ public class PlayerThrowGrenade : MonoBehaviour
     public GameObject grenade;
     public float tossForce;
     int grenadeCount;
-    string fireAxis;
+    KeyCode fireAxis;
     bool grenadeReady;
     bool isPoweredUp;
     public int cooldown = 10;
@@ -19,11 +19,11 @@ public class PlayerThrowGrenade : MonoBehaviour
         grenadeReady = true;
         if (gameObject.transform.parent.name == "PlayerOne")
         {
-            fireAxis = "PlayerOneFire2";
+            fireAxis = KeyCode.Joystick1Button2;
         }
         else if (gameObject.transform.parent.name == "PlayerTwo")
         {
-            fireAxis = "PlayerTwoFire2";
+            fireAxis = KeyCode.Joystick2Button2;
         }
     }
 
@@ -34,7 +34,7 @@ public class PlayerThrowGrenade : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetAxis(fireAxis) > 0 && grenadeReady)
+        if (Input.GetKeyDown(fireAxis) && grenadeReady)
         {
             grenadeReady = false;
             GameObject newGrnade = Instantiate(grenade, transform.position, Quaternion.identity) as GameObject;

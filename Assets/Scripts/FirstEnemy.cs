@@ -12,6 +12,7 @@ public class FirstEnemy : MonoBehaviour
     Animator anim;
     bool hitGround;
     bool isAttacking;
+    float distance;
 
     void Start()
     {
@@ -23,18 +24,26 @@ public class FirstEnemy : MonoBehaviour
 
     void Update()
     {
-        anim.SetFloat("Distance", Vector3.Distance(transform.position, target.transform.position));
-        if (hitGround)
-        {            
-            if (Vector3.Distance(transform.position, target.transform.position) > 5)
-                agent.SetDestination(target.transform.position);
-            else if (agent.remainingDistance <= 5)
-            {
-                if (GetComponent<Health>().health <= 0)
-                    StopAllCoroutines();
-                agent.velocity = Vector3.zero;
-                CallCoroutine("Attack");
+        if(GetComponent<Health>().health > 0)
+        {
+            distance = Vector3.Distance(transform.position, target.transform.position);
+            anim.SetFloat("Distance", distance);
+            if (hitGround)
+            {            
+                if (distance > 5)
+                    agent.SetDestination(target.transform.position);
+                else if (distance <= 5)
+                {
+                    agent.velocity = Vector3.zero;
+                    CallCoroutine("Attack");
+                }
             }
+        }
+        else
+        {
+            agent.velocity = Vector3.zero;
+            isAttacking = false;
+            StopAllCoroutines();
         }
     }
 
@@ -50,7 +59,7 @@ public class FirstEnemy : MonoBehaviour
             isAttacking = true;
             agent.velocity = Vector3.zero;
             anim.SetBool("Attack", true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
             anim.SetBool("Attack", false);
             yield return new WaitForSeconds(.65f);
             GameObject clone = Instantiate(ring, ringSpawn.transform.position, ringSpawn.transform.rotation) as GameObject;

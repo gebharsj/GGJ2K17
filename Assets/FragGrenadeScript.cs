@@ -15,7 +15,7 @@ public class FragGrenadeScript : MonoBehaviour
         if(other.collider.tag == "Ground")
         {
             GameObject ringEffect = Instantiate(ring, other.contacts[0].point, other.transform.rotation) as GameObject;
-            ringEffect.name = "PlayerRing";
+            ringEffect.name = ring.name.Substring(0, 13);
             ringEffect.transform.SetParent(null);
         }
     }

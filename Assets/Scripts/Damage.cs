@@ -13,7 +13,7 @@ public class Damage : MonoBehaviour
 
     void Update()
     {
-        print("Damage: " + damage);
+
     }
 	void OnParticleCollision(GameObject other)
     {
@@ -25,9 +25,8 @@ public class Damage : MonoBehaviour
 
     public IEnumerator PowerUp()
     {
-        print("Powering up damage");
-            damage = 100;
-            yield return new WaitForSeconds(15);
-            damage = oldDamage;
+        damage = 100;
+        yield return new WaitForSeconds(15);
+        damage = oldDamage;
     }
 }

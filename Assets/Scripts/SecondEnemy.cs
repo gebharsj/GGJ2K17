@@ -10,6 +10,7 @@ public class SecondEnemy : MonoBehaviour {
     Animator anim;
     bool hitGround;
     bool isAttacking;
+    float distance;
 
     void Start()
     {
@@ -21,24 +22,26 @@ public class SecondEnemy : MonoBehaviour {
 
     void Update()
     {
-        anim.SetFloat("Distance", Vector3.Distance(transform.position, target.transform.position));
-        if (hitGround)
+        if (GetComponent<Health>().health > 0)
         {
-            if (Vector3.Distance(transform.position, target.transform.position) > 10)
-                agent.SetDestination(target.transform.position);
-            else if (agent.remainingDistance <= 10)
+            distance = Vector3.Distance(transform.position, target.transform.position);
+            anim.SetFloat("Distance", distance);
+            if (hitGround)
             {
-                if (GetComponent<Health>().health <= 0)
+                if (distance > 10)
+                    agent.SetDestination(target.transform.position);
+                else if (distance <= 0)
                 {
-                    StopAllCoroutines();
-                    foreach (ParticleSystem ps in beamParts)
-                    {
-                        ps.enableEmission = false;
-                    }
+                    agent.velocity = Vector3.zero;
+                    CallCoroutine("Attack");
                 }
-                agent.velocity = Vector3.zero;
-                CallCoroutine("Attack");
             }
+        }
+        else
+        {
+            agent.velocity = Vector3.zero;
+            isAttacking = false;
+            StopAllCoroutines();
         }
     }
 
@@ -54,7 +57,7 @@ public class SecondEnemy : MonoBehaviour {
             isAttacking = true;
             agent.velocity = Vector3.zero;
             anim.SetBool("Attack", true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
             anim.SetBool("Attack", false);
             yield return new WaitForSeconds(.65f);
             foreach(ParticleSystem ps in beamParts)
