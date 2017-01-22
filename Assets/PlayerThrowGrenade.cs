@@ -13,6 +13,20 @@ public class PlayerThrowGrenade : MonoBehaviour
     int oldCooldown;
     Coroutine cr;
 
+    void OnEnable()
+    {
+        oldCooldown = cooldown;
+        grenadeReady = false;
+        if (gameObject.transform.parent.name == "PlayerOne")
+        {
+            fireAxis = KeyCode.Joystick1Button2;
+        }
+        else if (gameObject.transform.parent.name == "PlayerTwo")
+        {
+            fireAxis = KeyCode.Joystick2Button2;
+        }
+    }
+
     void Start()
     {
         oldCooldown = cooldown;
@@ -40,7 +54,7 @@ public class PlayerThrowGrenade : MonoBehaviour
             GameObject newGrnade = Instantiate(grenade, transform.position, Quaternion.identity) as GameObject;
             newGrnade.GetComponent<Rigidbody>().AddForce(transform.up * tossForce * 1.7f);
             newGrnade.GetComponent<Rigidbody>().AddForce(transform.forward * tossForce);
-             cr =  StartCoroutine(Cooldown());
+            cr =  StartCoroutine(Cooldown());
         }
     }
 
