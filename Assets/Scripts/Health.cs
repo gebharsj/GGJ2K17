@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Health : MonoBehaviour
     Animator anim;
     NavMeshAgent nav;
     string killer;
+    int lives = 3;
 
     void Start()
     {
@@ -70,6 +72,15 @@ public class Health : MonoBehaviour
             gameObject.SetActive(false);
         }
         else
+        {
             gameObject.SetActive(false);
+            transform.position = Vector3.zero;
+            gameObject.SetActive(true);
+            lives--;
+            if(lives <= 0)
+            {
+                SceneManager.LoadScene("GameOver");
+            }
+        }
     }
 }
