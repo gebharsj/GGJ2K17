@@ -12,8 +12,10 @@ public class TheWaveManager : MonoBehaviour {
     List<GameObject> activeEnemies = new List<GameObject>();
     bool canSpawn = false;
     public Text waveCountText;
+    GameManager gameManager;
 	// Use this for initialization
 	void Start () {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         enemyPool = GameObject.Find("EnemyPool").GetComponent<ObjectPooling>();
         StartCoroutine(StartWave());
     }
@@ -50,7 +52,13 @@ public class TheWaveManager : MonoBehaviour {
                     {
                         return;
                     }
-                    newEnemy.transform.position = enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].position;
+                    int choosePlayer = Random.Range(0, 1);
+                    newEnemy.transform.position = new Vector3(Random.Range(gameManager.players[choosePlayer].transform.position.x - 20,
+                        gameManager.players[choosePlayer].transform.position.x + 20),0,
+                        Random.Range(gameManager.players[choosePlayer].transform.position.z - 20,
+                        gameManager.players[choosePlayer].transform.position.z + 20));
+
+                    //enemySpawnPoints[Random.Range(0, enemySpawnPoints.Length)].position;
                     newEnemy.name = "Enemy";
                     newEnemy.SetActive(true);
                     activeEnemies.Add(newEnemy);

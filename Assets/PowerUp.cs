@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PowerUp : MonoBehaviour
 {
+    bool started;
     public enum PowerUpType
     {
         None,
@@ -33,46 +34,24 @@ public class PowerUp : MonoBehaviour
 
     void ApplyPowerUp(GameObject player)
     {
-        GetComponent<SphereCollider>().enabled = false;
-        GetComponent<MeshRenderer>().enabled = false;
-
         switch (type)
         {
             case PowerUpType.None:
                 Debug.LogError("The power up type has not been assigned!");
                 break;
             case PowerUpType.Speed:
-                originalSpeed = player.GetComponent<PlayerMovement>().speed;
-                player.GetComponent<PlayerMovement>().speed = 100;
-                StartCoroutine(PowerUpTimer());
-                player.GetComponent<PlayerMovement>().speed = originalSpeed;
-                Destroy(gameObject);
+                player.GetComponent<PowerUpManager>().PowerUpChosen("Speed");
                 break;
-            //case PowerUpType.Damage:
-            //    originalDamage = player.GetComponentInChildren<Damage>().;
-            //    player.GetComponentInChildren<Damage>().damageDone *= 10;
-            //    StartCoroutine(PowerUpTimer());
-            //    player.GetComponentInChildren<Damage>().damageDone = originalDamage;
-            //    Destroy(gameObject);
-            //    break;
+            case PowerUpType.Damage:
+                player.GetComponent<PowerUpManager>().PowerUpChosen("Damage");
+                break;
             case PowerUpType.SuperJump:
-                originalJumpForce = player.GetComponent<PlayerMovement>().jumpForce;
-                player.GetComponent<PlayerMovement>().jumpForce *= 3;
-                StartCoroutine(PowerUpTimer());
-                player.GetComponent<PlayerMovement>().jumpForce = originalJumpForce;
-                Destroy(gameObject);
+                player.GetComponent<PowerUpManager>().PowerUpChosen("Jump");
                 break;
-            //case PowerUpType.Grenade:
-            //    originalCooldown = player.GetComponent<TossGrenade>().cooldown;
-            //    player.GetComponent<TossGrenade>().cooldown = 1;
-            //    StartCoroutine(PowerUpTimer());
-            //    player.GetComponent<TossGrenade>().cooldown = originalCooldown;
-            //    Destroy(gameObject);
-            //    break;
+            case PowerUpType.Grenade:
+                player.GetComponent<PowerUpManager>().PowerUpChosen("Grenade");
+                break;
         }
-    }
-    IEnumerator PowerUpTimer()
-    {
-        yield return new WaitForSeconds(10);
+        Destroy(gameObject);
     }
 }

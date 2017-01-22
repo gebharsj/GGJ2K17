@@ -15,7 +15,11 @@ public class Grow : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.name == "PlayerOne" || other.name == "PlayerTwo")
+        if (transform.name != "PlayerRing" && other.name == "PlayerOne" || other.name == "PlayerTwo" && transform.name != "PlayerRing")
+        {
+            other.GetComponent<Health>().TookDamage(1);
+        }
+        else if(other.tag == "Enemy" && transform.name == "PlayerRing")
         {
             other.GetComponent<Health>().TookDamage(1);
         }

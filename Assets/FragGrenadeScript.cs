@@ -1,34 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FragGrenadeScript : MonoBehaviour {
-    [SerializeField]
-    private float fuseTimer, blastRadius, blastForce, blastUpwardsMod, throwForce;
+public class FragGrenadeScript : MonoBehaviour
+{
+    public GameObject ring;
+    public GameObject explosion;
 
-    Rigidbody _rb;
-
-    void OnEnable()
+    void Start()
     {
-        _rb = GetComponent<Rigidbody>();
-        _rb.AddForce(transform.forward * throwForce);
-        StartCoroutine(FragExplosion());
-    }	
-	IEnumerator FragExplosion()
+        StartCoroutine(Shrink());
+    }
+    void OnCollisionEnter(Collision other)
     {
-        yield return new WaitForSeconds(fuseTimer);
-        Collider[] colliders = Physics.OverlapSphere(transform.position, blastRadius);
-        foreach(Collider go in colliders)
+        if(other.collider.tag == "Ground")
         {
-            if(go.tag == "Enemy")
-            {
-                yield return new WaitForSeconds(.1f);
-                print(go.name);
-                go.attachedRigidbody.constraints = RigidbodyConstraints.None;
-                go.attachedRigidbody.AddExplosionForce(blastForce, this.gameObject.transform.position, blastRadius, blastUpwardsMod);
-                yield return new WaitForSeconds(.1f);
-            }
+            GameObject ringEffect = Instantiate(ring, other.contacts[0].point, other.transform.rotation) as GameObject;
+            ringEffect.name = "PlayerRing";
+            ringEffect.transform.SetParent(null);
         }
-        this.gameObject.SetActive(false);
-   }
+    }
+
+    IEnumerator Shrink()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            transform.localScale -= new Vector3(.1f, .1f, .1f);
+            yield return new WaitForSeconds(.6f);
+        }
+        Destroy(gameObject);
+    }
 }
 

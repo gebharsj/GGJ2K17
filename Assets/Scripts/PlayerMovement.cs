@@ -18,18 +18,20 @@ public class PlayerMovement : MonoBehaviour
     bool horiPressed;
     bool hori2Pressed;
     bool vertPressed;
-
+    public bool isPoweredUp = false;
     Animator anim;
     Rigidbody rb;
     KeyCode jumpButton;
     string horizontalAxis;
     string horizontalAxis2;
     string verticalAxis;
+    float originalJumpForce;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        originalJumpForce = jumpForce;
         originalGroundCheckDistance = groundCheckDistance;
         m_speed = speed;
 
@@ -96,8 +98,19 @@ public class PlayerMovement : MonoBehaviour
         else
             m_speed = speed;
 
-        transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
-        transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed, 0));
+        if(!isPoweredUp)
+        {
+            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed, 0f, vert * Time.deltaTime * m_speed));
+            transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed, 0));
+            print("Non powered up movement");
+        }
+        else
+        {
+            print("Powered up movement");
+            transform.Translate(new Vector3(hori * Time.deltaTime * m_speed * 2, 0f, vert * Time.deltaTime * m_speed * 2));
+            transform.Rotate(new Vector3(0, hori2 * Time.deltaTime * rotationSpeed * 2, 0));
+        }
+
     }
 
     void CheckGroundedStatus()
@@ -117,5 +130,19 @@ public class PlayerMovement : MonoBehaviour
                 anim.SetFloat("Height", hitInfo.distance);
             }
         }
+    }
+
+    public IEnumerator PowerUp()
+    {
+        isPoweredUp = true;
+        yield return new WaitForSeconds(15);
+        isPoweredUp = false;
+    }
+
+    public IEnumerator JumpPowerUp()
+    {
+        jumpForce *= 2;
+        yield return new WaitForSeconds(15);
+        jumpForce = originalJumpForce;
     }
 }

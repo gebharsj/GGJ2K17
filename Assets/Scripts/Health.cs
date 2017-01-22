@@ -33,7 +33,6 @@ public class Health : MonoBehaviour
     public void TookDamage(float damage)
     {
         health = health - damage;
-        if (gameObject.tag == "Player")
             healthBar.fillAmount = health / 100.0f;
 
         if(health <= 0)
@@ -46,7 +45,6 @@ public class Health : MonoBehaviour
     {
         killer = myKiller;
         health = health - damage;
-        if (gameObject.tag == "Player")
             healthBar.fillAmount = health / 100.0f;
 
         if (health <= 0)
@@ -62,7 +60,7 @@ public class Health : MonoBehaviour
             nav.velocity = Vector3.zero;
             int randomDeath = Random.Range(1, 3);
             anim.SetInteger("HasDied", randomDeath);
-            yield return new WaitForSeconds(7f);
+            yield return new WaitForSeconds(5f);
             anim.Stop();
             if (killer == "PlayerOne")
                 GameManager.playerOneScore++;

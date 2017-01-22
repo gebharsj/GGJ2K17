@@ -55,7 +55,7 @@ public class FirstEnemy : MonoBehaviour
             yield return new WaitForSeconds(.65f);
             GameObject clone = Instantiate(ring, ringSpawn.transform.position, ringSpawn.transform.rotation) as GameObject;
             clone.transform.SetParent(null);
-            yield return new WaitForSeconds(4.35f);
+            yield return new WaitForSeconds(4);
             isAttacking = false;
         }
     }

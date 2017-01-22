@@ -1,23 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerThrowGrenade : MonoBehaviour {
-    [SerializeField]
-    KeyCode throwingKey;
-    [SerializeField]
-    Transform grenadeSpawn;
-    [SerializeField]
-    GameObject frag;
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKeyDown(throwingKey))
+public class PlayerThrowGrenade : MonoBehaviour
+{
+    public GameObject grenade;
+    public float tossForce;
+    int grenadeCount;
+    string fireAxis;
+    bool grenadeReady;
+
+    void Start()
+    {
+        grenadeReady = true;
+        if (gameObject.transform.parent.name == "PlayerOne")
         {
-            GameObject clone = Instantiate(frag, grenadeSpawn.position, transform.rotation) as GameObject;
+            fireAxis = "PlayerOneFire";
         }
-	}
+        else if (gameObject.transform.parent.name == "PlayerTwo")
+        {
+            fireAxis = "PlayerTwoFire";
+        }
+    }
+
+    void Update()
+    {
+
+    }
+
+    void FixedUpdate()
+    {
+        if (Input.GetAxis(fireAxis) > 0 && grenadeReady)
+        {
+            grenadeReady = false;
+            GameObject newGrnade = Instantiate(grenade, transform.position, Quaternion.identity) as GameObject;
+            newGrnade.GetComponent<Rigidbody>().AddForce(transform.up * tossForce * 1.7f);
+            newGrnade.GetComponent<Rigidbody>().AddForce(transform.forward * tossForce);
+            StartCoroutine(Cooldown());
+        }
+    }
+
+    IEnumerator Cooldown()
+    {
+        yield return new WaitForSeconds(10);
+        grenadeReady = true;
+    }
 }
