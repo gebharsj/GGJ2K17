@@ -34,6 +34,7 @@ public class PowerUp : MonoBehaviour
 
     void ApplyPowerUp(GameObject player)
     {
+        PowerUpSpawner.powerUpActive = false;
         switch (type)
         {
             case PowerUpType.None:
